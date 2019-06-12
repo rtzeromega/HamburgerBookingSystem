@@ -1,0 +1,76 @@
+{% extends 'booksystem/base.html' %}
+
+{% block login_display %}
+    <a href="#">欢迎您 {{ username }} 先生/女士</a>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        function book(store_id) {
+            var choice = confirm("尊敬的顾客，您确定要订购吗");
+            if (choice == true) {
+                window.location = "/booksystem/buy/store/" + store_id;
+            }
+        }
+    </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid foods-container">
+
+    <div class="row">
+        <h2></h2>
+        <!-- Left Info -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'booksystem:detail' store.id %}">
+                        {% if store.logo %}
+                            <img src="{{ store.logo.url }}" class="img-responsive">
+                        {% else %}
+                            <h3>No image to display</h3>
+                        {% endif %}
+                    </a>
+                    <h1>{{ store.food }}
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="book({{ store.id }})">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    </h1>
+                    <h2>价格：{{ store.price }}元</h2>
+                    <h2>剩余量：{{ store.quantity }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Info -->
+        <div class="col-sm-12 col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>用户点评</h3>
+                    {% for like in like_result %}
+                        <h2>{{ like.user }}</h2>
+                        <td>{{ like.comment }}</td>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% include 'booksystem/form_template.html' %}
+                <div class="form-group">
+                    <div align="center">
+                        <button type="submit" class="btn btn-success">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}
